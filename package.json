@@ -1,0 +1,40 @@
+{
+  "name": "merylmovibox-pc",
+  "version": "1.0.0",
+  "description": "Version Windows portable et fenêtrée de MerylMoviesBox",
+  "main": "main.js",
+  "author": "jiminix",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.merylmovibox.pc",
+    "productName": "MerylMoviesBox PC",
+    "asar": true,
+    "files": [
+      "main.js",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "MerylMoviesBox-PC-Portable-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "MerylMoviesBox-PC-Portable-${version}.${ext}",
+      "requestExecutionLevel": "asInvoker"
+    }
+  }
+}
