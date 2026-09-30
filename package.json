@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win portable"
+    "dist": "electron-builder --win portable --publish never"
   },
   "devDependencies": {
     "electron": "^38.0.0",
@@ -34,7 +34,7 @@
     },
     "portable": {
       "artifactName": "MerylMoviesBox-PC-Portable-${version}.${ext}",
-      "requestExecutionLevel": "asInvoker"
+      "requestExecutionLevel": "user"
     }
   }
 }
