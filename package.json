@@ -19,7 +19,8 @@
     "asar": true,
     "files": [
       "main.js",
-      "package.json"
+      "package.json",
+      "404-preview.html"
     ],
     "win": {
       "target": [
