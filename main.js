@@ -46,7 +46,7 @@ function createWindow() {
   });
 
   if (MAINTENANCE_PREVIEW) {
-    win.loadFile('maintenance-preview.html');
+    win.loadFile('404-preview.html');
   } else {
     win.loadURL(APP_URL);
   }
