@@ -1,6 +1,8 @@
 const { app, BrowserWindow, shell } = require('electron');
 
 const APP_URL = 'https://merylmoviesbox.web.app';
+// Opt-in maintenance preview; normal operation remains the default.
+const MAINTENANCE_PREVIEW = process.env.MERYL_MAINTENANCE_PREVIEW === '1';
 const START_WIDTH = 761;
 const START_HEIGHT = 765;
 
@@ -43,7 +45,11 @@ function createWindow() {
     win.show();
   });
 
-  win.loadURL(APP_URL);
+  if (MAINTENANCE_PREVIEW) {
+    win.loadFile('maintenance-preview.html');
+  } else {
+    win.loadURL(APP_URL);
+  }
 }
 
 app.whenReady().then(() => {
