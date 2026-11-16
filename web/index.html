@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>MerylMoviBox V3</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f5f7fb;background:#101827}
+    *{box-sizing:border-box}body{margin:0}header{padding:22px 16px;text-align:center;background:linear-gradient(115deg,#3b196c,#14564d)}
+    h1{margin:0;font-size:clamp(26px,6vw,42px);letter-spacing:1px}header p{margin:6px 0 0;font-size:12px;letter-spacing:2px}
+    .status{background:#522783;text-align:center;padding:11px;font-weight:700}
+    main{max-width:1100px;margin:auto;padding:18px 14px 100px}
+    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+    nav button{border:1px solid #69738d;background:#202b43;color:white;border-radius:8px;padding:10px 13px;cursor:pointer}
+    nav button[aria-pressed="true"]{background:#7840bc;border-color:#c49eff}
+    .empty{padding:50px 18px;text-align:center;border:1px dashed #60718e;border-radius:14px;color:#c8d1e0}
+    .dock{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;gap:4px;background:#153e35;padding:12px 5px;box-shadow:0 -5px 20px #0005}
+    .dock span{font-size:11px;font-weight:700}
+  </style>
+</head>
+<body>
+  <header><h1>MERYL MOVI BOX</h1><p>TOP FILMS, SÉRIES & VINYLES</p></header>
+  <div class="status">V3 — Nouvelle bibliothèque</div>
+  <main>
+    <nav aria-label="Collections" id="tabs"></nav>
+    <section class="empty" aria-live="polite"><h2 id="section">Films US</h2><p>Structure V3 prête. Aucun film importé : les données V2 restent intactes.</p></section>
+  </main>
+  <footer class="dock" aria-label="Menu"><span>MENU</span><span>RECHERCHE</span><span>MAJ</span><span>ADMIN</span><span>STAT</span><span>MIX</span></footer>
+  <script>
+    const tabs=[["US","Films US"],["FR","Films FR"],["NANAR","Nanars"],["B.O","Bandes originales"],["UCPM","UCPM"],["VUS","VUS"],["SÉRIES","Séries"],["LP","Vinyles"]];
+    const nav=document.getElementById("tabs"),section=document.getElementById("section");
+    tabs.forEach(([name,label],i)=>{const b=document.createElement("button");b.textContent=name;b.type="button";b.setAttribute("aria-pressed",String(i===0));b.addEventListener("click",()=>{section.textContent=label;nav.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)))});nav.appendChild(b)});
+  </script>
+</body>
+</html>
