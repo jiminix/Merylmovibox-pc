@@ -1,0 +1,50 @@
+name: Déployer MerylMoviBox V3 sur Firebase Hosting
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: merylmovibox-v3-hosting
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: v3-hosting
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v3/web
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Installer et vérifier la V3
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Vérifier la présence de l'autorisation Firebase
+        env:
+          FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX" ]; then
+            echo "::error::Configurer le secret FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX avant de déployer."
+            exit 1
+          fi
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX" > "$RUNNER_TEMP/firebase-key.json"
+          chmod 600 "$RUNNER_TEMP/firebase-key.json"
+      - name: Publier uniquement le site Firebase merylmovibox
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-key.json
+        run: npx --yes firebase-tools@14.25.1 deploy --only hosting:merylmovibox --project merylmovibox --non-interactive
+      - name: Effacer le fichier temporaire
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-key.json"
