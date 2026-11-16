@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: merylmovibox-v3-hosting
@@ -31,20 +32,10 @@ jobs:
           npm ci
           npm test
           npm run build
-      - name: Vérifier la présence de l'autorisation Firebase
-        env:
-          FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX }}
-        run: |
-          if [ -z "$FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX" ]; then
-            echo "::error::Configurer le secret FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX avant de déployer."
-            exit 1
-          fi
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_MERYLMOVIBOX" > "$RUNNER_TEMP/firebase-key.json"
-          chmod 600 "$RUNNER_TEMP/firebase-key.json"
-      - name: Publier uniquement le site Firebase merylmovibox
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-key.json
+      - name: Authentification Google Cloud sans clé (GitHub OIDC)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/852912622990/locations/global/workloadIdentityPools/merylmovibox-github-v3/providers/github
+          service_account: merylmovibox-v3-deploy@merylmovibox.iam.gserviceaccount.com
+      - name: Publier uniquement le site Firebase V3
         run: npx --yes firebase-tools@14.25.1 deploy --only hosting:merylmovibox --project merylmovibox --non-interactive
-      - name: Effacer le fichier temporaire
-        if: always()
-        run: rm -f "$RUNNER_TEMP/firebase-key.json"
