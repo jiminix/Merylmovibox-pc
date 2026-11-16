@@ -1,0 +1,26 @@
+name: Deploy MerylMoviBox V3 (Firebase Hosting)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud (OIDC)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/852912622990/locations/global/workloadIdentityPools/merylmovibox-github-v3/providers/github
+          service_account: merylmovibox-v3-deploy@merylmovibox.iam.gserviceaccount.com
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Deploy V3 only
+        run: npx --yes firebase-tools@14 deploy --project merylmovibox --only hosting --config web/firebase.json --non-interactive
